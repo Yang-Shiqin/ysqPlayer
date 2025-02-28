@@ -2,6 +2,11 @@
 
 #include "av_processor.h"
 
+extern "C"
+{
+#include <SDL2/SDL.h>
+}
+
 #define MAX_AUDIO_FRAME_SIZE 192000
 #define MAX_AUDIO_FRAME_READ_ONCE 5
 
@@ -143,8 +148,6 @@ AvProcessor::AvProcessor(const char *src){
         this->invalid = SWR_GETCONTEXT_FAILED;
         return;
     }
-    // 9. 初始化快进快退锁
-    this->seek_mutex = SDL_CreateMutex();
 }
 
 // 析构函数, 错误处理和资源释放
@@ -159,7 +162,6 @@ AvProcessor::~AvProcessor(){
     case CREAT_DVIDEO_THREAD_FAILED:
         this->is_quit = 1;
         swr_free(&this->swr_ctx);
-        SDL_DestroyMutex(this->seek_mutex);
     case SWR_GETCONTEXT_FAILED:
         sws_freeContext(this->sws_ctx);
     case SWS_GETCONTEXT_FAILED:

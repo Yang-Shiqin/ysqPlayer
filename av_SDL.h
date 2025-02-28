@@ -1,6 +1,11 @@
 #pragma once
 #include "av_processor.h"
 
+extern "C"
+{
+#include <SDL2/SDL.h>
+}
+
 class Player{
 private:
     AvProcessor* processor; // 音视频处理类

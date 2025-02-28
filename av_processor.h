@@ -62,7 +62,7 @@ private:
     // 功能-快进快退
     int64_t seek_pos;   // 快进快退的目标位置，秒 * AV_TIME_BASE
     int seek_flag = 0;  // 0为正常播放, 1为快进, -1为快退
-    SDL_mutex *seek_mutex;
+    std::mutex seek_mutex;
 public:
     int invalid = 0;  // 错误处理, 0: valid, >0: invalid
     AvProcessor(const char *src);
@@ -96,10 +96,9 @@ public:
     int get_channels(){ return this->a_codec_ctx->ch_layout.nb_channels; }
     int get_sample_rate(){ return this->a_codec_ctx->sample_rate; }
     void set_seek_flag(int flag, double pos_time){
-        SDL_LockMutex(this->seek_mutex);
+        std::lock_guard<std::mutex> lock(this->seek_mutex);
         this->seek_flag = flag;
         this->seek_pos = (int64_t)(std::max(0., pos_time) * AV_TIME_BASE);
         av_log(nullptr, AV_LOG_DEBUG, "seek_pos %lld, pos_time %lf, seek_flag %d\n", this->seek_pos, pos_time, this->seek_flag);
-        SDL_UnlockMutex(this->seek_mutex);
     }
 };

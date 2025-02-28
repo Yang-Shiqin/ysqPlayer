@@ -7,7 +7,7 @@ project(BasicAvPlayer CXX)
 # C++17标准
 set(CMAKE_CXX_STANDARD 17)
 # 设置编译器标志
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Wextra -g")
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Wextra -fsanitize=address -g")
 
 # 查找必要的库
 find_package(SDL2 REQUIRED)
